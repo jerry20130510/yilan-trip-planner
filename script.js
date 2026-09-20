@@ -168,54 +168,47 @@ const tripData = {
       ]
     }
   ],
-  food: [
-    { id: "liushui", name: "流水森林", day: "第一天午餐", time: "11:30", people: "14 人", status: "已確認", address: "待補", phone: "待補", bookingName: "待補", bookingTime: "11:30" },
-    { id: "bbq", name: "民宿 BBQ", day: "第一天晚餐", time: "18:30", people: "14 人", status: "已確認", address: "住宿地址待補", phone: "不適用", bookingName: "不適用", bookingTime: "不適用" },
-    { id: "breakfast", name: "住宿早餐", day: "第二天早餐", time: "08:30", people: "14 人", status: "待確認", address: "住宿地址待補", phone: "待補", bookingName: "不適用", bookingTime: "待確認" },
-    { id: "red-crab", name: "紅蟳蟹海鮮餐廳", day: "第二天午餐", time: "12:30", people: "約 14 人", status: "暫定", address: "待補", phone: "待補", bookingName: "待補", bookingTime: "待確認" },
-    { id: "dinner-day2", name: "第二天晚餐", day: "第二天晚餐", time: "19:00", people: "約 14 人", status: "未安排", address: "待安排", phone: "待安排", bookingName: "待安排", bookingTime: "待安排" }
-  ],
   shopping: [
-    { category: "肉類", note: "數量尚未完全確認", items: [
-      { id: "beef", name: "牛肉", owner: "Jerry", quantity: "2 盒", note: "數量待大家確認" },
-      { id: "pork", name: "豬肉", owner: "尚未指定", quantity: "", note: "里肌或梅花豬，適合直接烤" },
-      { id: "chicken", name: "雞肉", owner: "尚未指定", quantity: "", note: "整片雞胸，烤之前需要剪或切" }
+    { category: "肉類", items: [
+      { id: "beef", name: "牛肉" },
+      { id: "pork", name: "豬肉" },
+      { id: "chicken", name: "雞肉" }
     ] },
-    { category: "海鮮", note: "冷凍食材請注意保冷", items: [
-      { id: "shrimp", name: "冷凍蝦仁", owner: "尚未指定", quantity: "", note: "準備保冷袋" }
+    { category: "海鮮", items: [
+      { id: "shrimp", name: "冷凍蝦仁" }
     ] },
-    { category: "蔬菜", note: "建議清單，尚未全部確認", items: [
-      { id: "corn", name: "玉米", owner: "尚未指定", quantity: "", note: "" },
-      { id: "mushroom", name: "杏鮑菇", owner: "尚未指定", quantity: "", note: "" },
-      { id: "pepper", name: "甜椒", owner: "尚未指定", quantity: "", note: "" },
-      { id: "zucchini", name: "櫛瓜", owner: "尚未指定", quantity: "", note: "" },
-      { id: "onion", name: "洋蔥", owner: "尚未指定", quantity: "", note: "" }
+    { category: "蔬菜", items: [
+      { id: "corn", name: "玉米" },
+      { id: "mushroom", name: "杏鮑菇" },
+      { id: "pepper", name: "甜椒" },
+      { id: "zucchini", name: "櫛瓜" },
+      { id: "onion", name: "洋蔥" }
     ] },
-    { category: "飲料", note: "酒類是否購買仍待確認", items: [
-      { id: "guava-tea", name: "芭樂檸檬綠茶", owner: "尚未指定", quantity: "", note: "" },
-      { id: "tea", name: "無糖茶", owner: "尚未指定", quantity: "", note: "" },
-      { id: "soda", name: "汽水", owner: "尚未指定", quantity: "", note: "" },
-      { id: "water", name: "礦泉水", owner: "尚未指定", quantity: "", note: "" },
-      { id: "alcohol", name: "酒類", owner: "尚未指定", quantity: "", note: "待確認是否購買" }
+    { category: "飲料", items: [
+      { id: "guava-tea", name: "芭樂檸檬綠茶" },
+      { id: "tea", name: "無糖茶" },
+      { id: "soda", name: "汽水" },
+      { id: "water", name: "礦泉水" },
+      { id: "alcohol", name: "啤酒" }
     ] },
-    { category: "其他", note: "點心與主食", items: [
-      { id: "snacks", name: "零食", owner: "尚未指定", quantity: "", note: "" },
-      { id: "ice", name: "冰塊", owner: "尚未指定", quantity: "", note: "" },
-      { id: "bread", name: "吐司／主食", owner: "尚未指定", quantity: "", note: "" },
-      { id: "dessert", name: "甜點", owner: "尚未指定", quantity: "", note: "" },
-      { id: "icecream", name: "小美冰淇淋", owner: "尚未指定", quantity: "", note: "有人提出，尚未確認購買" }
+    { category: "主食與點心", items: [
+      { id: "snacks", name: "零食" },
+      { id: "ice", name: "冰塊" },
+      { id: "bread", name: "吐司／主食" },
+      { id: "dessert", name: "甜點" },
+      { id: "icecream", name: "小美冰淇淋" }
     ] },
-    { category: "容易忘記", note: "以下皆為建議準備", items: [
-      { id: "tongs", name: "烤肉夾", owner: "尚未指定", quantity: "", note: "" },
-      { id: "scissors", name: "剪刀", owner: "尚未指定", quantity: "", note: "" },
-      { id: "plates", name: "紙盤", owner: "尚未指定", quantity: "", note: "" },
-      { id: "bowls", name: "紙碗", owner: "尚未指定", quantity: "", note: "" },
-      { id: "cups", name: "紙杯", owner: "尚未指定", quantity: "", note: "" },
-      { id: "chopsticks", name: "筷子", owner: "尚未指定", quantity: "", note: "" },
-      { id: "trash-bags", name: "垃圾袋", owner: "尚未指定", quantity: "", note: "" },
-      { id: "tissue", name: "衛生紙", owner: "尚未指定", quantity: "", note: "" },
-      { id: "wet-wipes", name: "濕紙巾", owner: "尚未指定", quantity: "", note: "" },
-      { id: "extra-ice", name: "備用冰塊", owner: "尚未指定", quantity: "", note: "" }
+    { category: "用品", items: [
+      { id: "tongs", name: "烤肉夾" },
+      { id: "scissors", name: "剪刀" },
+      { id: "plates", name: "紙盤" },
+      { id: "bowls", name: "紙碗" },
+      { id: "cups", name: "紙杯" },
+      { id: "chopsticks", name: "筷子" },
+      { id: "trash-bags", name: "垃圾袋" },
+      { id: "tissue", name: "衛生紙" },
+      { id: "wet-wipes", name: "濕紙巾" },
+      { id: "extra-ice", name: "備用冰塊" }
     ] }
   ],
   transport: {
@@ -229,25 +222,24 @@ const tripData = {
       others: "其他人員分車待確認",
       price: "正式價格待確認"
     }
-  },
-  todos: [
-    "住宿正式名稱", "住宿地址", "入住時間", "退房時間", "住宿早餐時間", "流水森林完整地址",
-    "紅蟳蟹正式訂位時間", "紅蟳蟹最終人數", "確認飲食禁忌：生食、海鮮、牛、豬", "天送埤繩索活動是否需要預約",
-    "沙灘車正式集合時間", "沙灘車最終價格", "第二天晚餐", "分車名單", "BBQ 每項食材數量",
-    "每項採買負責人", "是否購買酒類", "是否還有第三天行程"
-  ].map((text, index) => ({ id: `todo-${index + 1}`, text, completed: false }))
+  }
 };
 
 const memoryStorage = new Map();
 const SUPABASE_TABLE = "trip_responses";
 const TRIP_EVENTS_TABLE = "trip_events";
+const SHOPPING_ITEMS_TABLE = "shopping_items";
+const SHOPPING_PHOTOS_BUCKET = "shopping-photos";
+const MAX_SHOPPING_PHOTO_SIZE = 5 * 1024 * 1024;
 const LOCAL_TRIP_EVENTS_KEY = "yilan-dashboard-trip-events";
+const LOCAL_SHOPPING_ITEMS_KEY = "yilan-dashboard-shopping-items";
 const SUPABASE_CONFIG = Object.freeze({
   url: "https://fkkoexjzpyzgfdwcjqub.supabase.co",
   anonKey: "sb_publishable_IUwnVjU03uZ1xrwqPeybRw_oSAHpuBQ"
 });
 let activeDayId = tripData.days[0].id;
 let eventProgress = new Set();
+let shoppingProgress = new Set();
 
 function getStorageKey(section, id, field = "") {
   return ["yilan-dashboard", section, id, field].filter(Boolean).join("-");
@@ -468,6 +460,8 @@ async function supabaseTableRequest(table, query = "", options = {}) {
       const errorData = await response.json();
       if (errorData.code === "PGRST205" && table === TRIP_EVENTS_TABLE) {
         message = "尚未建立行程資料表，請先在 Supabase 執行 trip_events 建表語法";
+      } else if (errorData.code === "PGRST205" && table === SHOPPING_ITEMS_TABLE) {
+        message = "尚未建立採買資料表，請先在 Supabase 執行 shopping_items 建表語法";
       } else {
         message = errorData.message || errorData.hint || message;
       }
@@ -498,20 +492,162 @@ function getStatusClass(status) {
   return classes[status] || "unplanned";
 }
 
-function isTodoDone(item) {
-  return readStorage(getStorageKey("todo", item.id), "false") === "true";
-}
-
-function getRemainingTodoCount() {
-  return tripData.todos.filter((item) => !isTodoDone(item)).length;
-}
-
 function getShoppingItems() {
   return tripData.shopping.flatMap((group) => group.items);
 }
 
 function isShoppingDone(item) {
-  return readStorage(getStorageKey("shopping", item.id), "false") === "true";
+  return shoppingProgress.has(item.id) || readStorage(getStorageKey("shopping", item.id), "false") === "true";
+}
+
+function buildShoppingItemPayload(item, category, sortOrder = 0) {
+  return {
+    item_id: String(item.id).trim(),
+    category: String(category).trim(),
+    item_name: String(item.name).trim(),
+    sort_order: Number(sortOrder),
+    completed: Boolean(item.completed),
+    photo_path: String(item.photoPath || "")
+  };
+}
+
+function shoppingItemFromRow(row) {
+  return {
+    id: String(row.item_id),
+    name: String(row.item_name || "未命名品項"),
+    completed: Boolean(row.completed),
+    photoPath: String(row.photo_path || "")
+  };
+}
+
+function upsertShoppingItem(groups, category, item) {
+  return groups.map((group) => {
+    const items = group.items.filter((current) => current.id !== item.id);
+    return {
+      ...group,
+      items: group.category === category ? [...items, item] : items
+    };
+  });
+}
+
+function removeShoppingItem(groups, itemId) {
+  return groups.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => item.id !== itemId)
+  }));
+}
+
+function createShoppingItemId() {
+  return `shopping-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function validateShoppingPhoto(file) {
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (!file) return "請先選擇照片。";
+  if (!allowedTypes.includes(file.type)) return "照片只支援 JPG、PNG 或 WebP。";
+  if (file.size > MAX_SHOPPING_PHOTO_SIZE) return "照片大小不可超過 5 MB。";
+  return "";
+}
+
+function buildShoppingPhotoPath(itemId) {
+  const safeId = String(itemId).replace(/[^a-zA-Z0-9_-]/g, "-");
+  return `${safeId}/photo`;
+}
+
+function encodeStoragePath(path) {
+  return String(path).split("/").map(encodeURIComponent).join("/");
+}
+
+function getPublicShoppingPhotoUrl(photoPath) {
+  if (!photoPath) return "";
+  const config = getSupabaseConfig();
+  return `${config.url}/storage/v1/object/public/${SHOPPING_PHOTOS_BUCKET}/${encodeStoragePath(photoPath)}`;
+}
+
+function updateShoppingPhotoPath(itemId, photoPath) {
+  replaceShoppingGroups(tripData.shopping.map((group) => ({
+    ...group,
+    items: group.items.map((item) => (
+      item.id === itemId ? { ...item, photoPath } : item
+    ))
+  })));
+}
+
+async function uploadShoppingPhoto(itemId, file) {
+  const validationMessage = validateShoppingPhoto(file);
+  if (validationMessage) throw new Error(validationMessage);
+
+  const config = getSupabaseConfig();
+  if (!isValidSupabaseConfig(config)) throw new Error("Supabase 連線設定不完整");
+
+  const photoPath = buildShoppingPhotoPath(itemId);
+  const uploadUrl = `${config.url}/storage/v1/object/${SHOPPING_PHOTOS_BUCKET}/${encodeStoragePath(photoPath)}`;
+  const response = await fetch(uploadUrl, {
+    method: "POST",
+    headers: buildSupabaseHeaders(config.anonKey, {
+      "Content-Type": file.type,
+      "x-upsert": "true"
+    }),
+    body: file
+  });
+
+  if (!response.ok) {
+    let message = `照片上傳失敗 ${response.status}`;
+    try {
+      const errorData = await response.json();
+      message = errorData.message || errorData.error || message;
+    } catch (error) {
+      message = response.statusText || message;
+    }
+    throw new Error(message);
+  }
+
+  updateShoppingPhotoPath(itemId, photoPath);
+  saveLocalShoppingItems();
+  renderShopping();
+
+  await supabaseTableRequest(SHOPPING_ITEMS_TABLE, `item_id=eq.${encodeURIComponent(itemId)}`, {
+    method: "PATCH",
+    headers: { Prefer: "return=minimal" },
+    body: JSON.stringify({ photo_path: photoPath })
+  });
+}
+
+function replaceShoppingGroups(groups) {
+  tripData.shopping.splice(0, tripData.shopping.length, ...groups);
+}
+
+function applyShoppingRows(rows) {
+  const groups = tripData.shopping.map((group) => ({
+    ...group,
+    items: rows
+      .filter((row) => row.category === group.category)
+      .sort((first, second) => Number(first.sort_order) - Number(second.sort_order))
+      .map(shoppingItemFromRow)
+  }));
+  shoppingProgress = new Set(rows.filter((row) => row.completed).map((row) => String(row.item_id)));
+  replaceShoppingGroups(groups);
+}
+
+function saveLocalShoppingItems() {
+  const rows = tripData.shopping.flatMap((group) => group.items.map((item, index) => (
+    buildShoppingItemPayload({ ...item, completed: shoppingProgress.has(item.id) }, group.category, index)
+  )));
+  writeStorage(LOCAL_SHOPPING_ITEMS_KEY, JSON.stringify(rows));
+}
+
+function loadLocalShoppingItems() {
+  const saved = readStorage(LOCAL_SHOPPING_ITEMS_KEY, "");
+  if (!saved) return false;
+
+  try {
+    const rows = JSON.parse(saved);
+    if (!Array.isArray(rows)) return false;
+    applyShoppingRows(rows);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 function getLocalEventProgress() {
@@ -610,7 +746,6 @@ function renderQuickInfo() {
   const nextEvent = getNextIncompleteEvent(tripData.days, eventProgress);
   document.querySelector("#nextEvent").textContent = nextEvent ? `${nextEvent.time} ${nextEvent.place}` : "全部行程已完成";
   document.querySelector("#weatherInfo").textContent = `${tripData.weather.place} ${tripData.weather.temperature}／${tripData.weather.condition}`;
-  document.querySelector("#pendingCount").textContent = `${getRemainingTodoCount()} 件`;
 }
 
 function renderDayTabs() {
@@ -664,60 +799,32 @@ function renderSchedule() {
   `;
 }
 
-function renderFood() {
-  const foodGrid = document.querySelector("#foodGrid");
-
-  foodGrid.innerHTML = tripData.food.map((meal) => `
-    <article class="food-card">
-      <span class="status status-${getStatusClass(meal.status)}">${escapeHtml(meal.status)}</span>
-      <h3>${escapeHtml(meal.name)}</h3>
-      <p><strong>${escapeHtml(meal.day)}</strong>｜${escapeHtml(meal.time)}｜${escapeHtml(meal.people)}</p>
-      <p>地址：<span class="${meal.address.includes("待") ? "placeholder" : ""}">${escapeHtml(meal.address)}</span></p>
-      <p>電話：${escapeHtml(meal.phone)}</p>
-      <p>訂位姓名：${escapeHtml(meal.bookingName)}</p>
-      <p>訂位時間：${escapeHtml(meal.bookingTime)}</p>
-      <a class="map-button" href="${createMapUrl(meal.name, meal.address)}" target="_blank" rel="noopener">開啟地圖</a>
-    </article>
-  `).join("");
-}
-
 function renderShopping() {
   const shoppingGrid = document.querySelector("#shoppingGrid");
 
   shoppingGrid.innerHTML = tripData.shopping.map((group) => `
     <section class="shopping-group">
-      <h3>${escapeHtml(group.category)} <small>｜${escapeHtml(group.note)}</small></h3>
-      <div class="shopping-items">
+      <h3>${escapeHtml(group.category)}</h3>
+      <ul class="shopping-items">
         ${group.items.map((item) => {
           const done = isShoppingDone(item);
-          const owner = readStorage(getStorageKey("shopping", item.id, "owner"), item.owner);
-          const quantity = readStorage(getStorageKey("shopping", item.id, "quantity"), item.quantity);
-          const note = readStorage(getStorageKey("shopping", item.id, "note"), item.note);
 
           return `
-            <article class="shopping-item ${done ? "is-done" : ""}">
+            <li class="shopping-item ${done ? "is-done" : ""}">
               <input type="checkbox" data-shopping-check="${item.id}" ${done ? "checked" : ""} aria-label="${escapeHtml(item.name)}已購買">
-              <div>
-                <div class="shopping-name">
-                  <strong>${escapeHtml(item.name)}</strong>
-                  <span class="status ${done ? "status-confirmed" : "status-pending"}">${done ? "已買" : "待買"}</span>
-                </div>
-                <div class="shopping-fields">
-                  <label>負責人
-                    <input type="text" data-shopping-field="owner" data-item-id="${item.id}" value="${escapeHtml(owner)}" placeholder="尚未指定">
-                  </label>
-                  <label>數量
-                    <input type="text" data-shopping-field="quantity" data-item-id="${item.id}" value="${escapeHtml(quantity)}" placeholder="待確認">
-                  </label>
-                  <label>備註
-                    <input type="text" data-shopping-field="note" data-item-id="${item.id}" value="${escapeHtml(note)}" placeholder="可補充注意事項">
-                  </label>
-                </div>
+              <strong>${escapeHtml(item.name)}</strong>
+              <div class="shopping-item-actions">
+                <input class="shopping-photo-input" type="file" data-shopping-photo="${item.id}" accept="image/jpeg,image/png,image/webp">
+                <button class="secondary-button shopping-photo-button" type="button" data-select-shopping-photo="${item.id}">上傳照片</button>
+                ${item.photoPath
+                  ? `<a class="secondary-button shopping-photo-button" href="${getPublicShoppingPhotoUrl(item.photoPath)}" target="_blank" rel="noopener">檢視照片</a>`
+                  : '<button class="secondary-button shopping-photo-button" type="button" disabled>檢視照片</button>'}
+                <button class="shopping-delete-button" type="button" data-delete-shopping="${item.id}" aria-label="刪除${escapeHtml(item.name)}">×</button>
               </div>
-            </article>
+            </li>
           `;
         }).join("")}
-      </div>
+      </ul>
     </section>
   `).join("");
 
@@ -728,6 +835,125 @@ function updateShoppingProgress() {
   const items = getShoppingItems();
   const finished = items.filter(isShoppingDone).length;
   document.querySelector("#shoppingProgress").textContent = `已買 ${finished}／${items.length}`;
+}
+
+function setShoppingSyncStatus(text, state = "") {
+  const status = document.querySelector("#shoppingSyncStatus");
+  status.textContent = text;
+  status.className = `sync-status${state ? ` is-${state}` : ""}`;
+}
+
+async function loadShoppingItems() {
+  const hadLocalItems = loadLocalShoppingItems();
+  if (!hadLocalItems) {
+    shoppingProgress = new Set(getShoppingItems().filter(isShoppingDone).map((item) => item.id));
+  }
+  renderShopping();
+  setShoppingSyncStatus("僅儲存在這台裝置", "local");
+
+  if (!isValidSupabaseConfig(getSupabaseConfig())) return;
+
+  try {
+    const query = "select=item_id,category,item_name,sort_order,completed,photo_path&order=category.asc,sort_order.asc";
+    let rows = await supabaseTableRequest(SHOPPING_ITEMS_TABLE, query);
+
+    if (!rows.length && getShoppingItems().length) {
+      rows = tripData.shopping.flatMap((group) => group.items.map((item, index) => (
+        buildShoppingItemPayload({ ...item, completed: shoppingProgress.has(item.id) }, group.category, index)
+      )));
+      await supabaseTableRequest(SHOPPING_ITEMS_TABLE, "on_conflict=item_id", {
+        method: "POST",
+        headers: { Prefer: "resolution=merge-duplicates,return=representation" },
+        body: JSON.stringify(rows)
+      });
+    }
+
+    applyShoppingRows(rows);
+    saveLocalShoppingItems();
+    renderShopping();
+    setShoppingSyncStatus("採買清單已同步", "synced");
+  } catch (error) {
+    setShoppingSyncStatus(error.message, "error");
+  }
+}
+
+async function setShoppingCompleted(itemId, completed) {
+  if (completed) shoppingProgress.add(itemId);
+  else shoppingProgress.delete(itemId);
+
+  writeStorage(getStorageKey("shopping", itemId), completed);
+  saveLocalShoppingItems();
+  renderShopping();
+
+  try {
+    await supabaseTableRequest(SHOPPING_ITEMS_TABLE, `item_id=eq.${encodeURIComponent(itemId)}`, {
+      method: "PATCH",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({ completed: Boolean(completed) })
+    });
+    setShoppingSyncStatus("勾選狀態已同步", "synced");
+  } catch (error) {
+    setShoppingSyncStatus(`已存本機：${error.message}`, "error");
+  }
+}
+
+async function addShoppingItem(category, name) {
+  const item = { id: createShoppingItemId(), name: String(name).trim(), completed: false, photoPath: "" };
+  replaceShoppingGroups(upsertShoppingItem(tripData.shopping, category, item));
+  saveLocalShoppingItems();
+  renderShopping();
+
+  const group = tripData.shopping.find((current) => current.category === category);
+  const payload = buildShoppingItemPayload(item, category, group.items.length - 1);
+  try {
+    await supabaseTableRequest(SHOPPING_ITEMS_TABLE, "on_conflict=item_id", {
+      method: "POST",
+      headers: { Prefer: "resolution=merge-duplicates,return=representation" },
+      body: JSON.stringify(payload)
+    });
+    setShoppingSyncStatus("新項目已同步", "synced");
+  } catch (error) {
+    setShoppingSyncStatus(`已存本機：${error.message}`, "error");
+  }
+}
+
+async function deleteShoppingItem(itemId) {
+  replaceShoppingGroups(removeShoppingItem(tripData.shopping, itemId));
+  shoppingProgress.delete(itemId);
+  writeStorage(getStorageKey("shopping", itemId), false);
+  saveLocalShoppingItems();
+  renderShopping();
+
+  try {
+    await supabaseTableRequest(SHOPPING_ITEMS_TABLE, `item_id=eq.${encodeURIComponent(itemId)}`, {
+      method: "DELETE",
+      headers: { Prefer: "return=minimal" }
+    });
+    setShoppingSyncStatus("品項已刪除", "synced");
+  } catch (error) {
+    setShoppingSyncStatus(`本機已刪除：${error.message}`, "error");
+  }
+}
+
+function setShoppingItemMessage(text, state = "") {
+  const message = document.querySelector("#shoppingItemMessage");
+  message.textContent = text;
+  message.className = `form-message${state ? ` is-${state}` : ""}`;
+}
+
+function openShoppingItemEditor() {
+  const form = document.querySelector("#shoppingItemForm");
+  form.reset();
+  form.elements.category.innerHTML = tripData.shopping.map((group) => (
+    `<option value="${escapeHtml(group.category)}">${escapeHtml(group.category)}</option>`
+  )).join("");
+  setShoppingItemMessage("");
+  document.querySelector("#shoppingItemEditor").showModal();
+  form.elements.name.focus();
+}
+
+function closeShoppingItemEditor() {
+  document.querySelector("#shoppingItemEditor").close();
 }
 
 function renderTransport() {
@@ -841,21 +1067,6 @@ async function loadResponses() {
     setConnectionStatus("連線失敗", "error");
     setResponseMessage(error.message, "error");
   }
-}
-
-function renderTodos() {
-  document.querySelector("#todoList").innerHTML = tripData.todos.map((item) => {
-    const done = isTodoDone(item);
-    return `
-      <label class="todo-item ${done ? "is-done" : ""}">
-        <input type="checkbox" data-todo-id="${item.id}" ${done ? "checked" : ""}>
-        <span>${escapeHtml(item.text)}</span>
-      </label>
-    `;
-  }).join("");
-
-  const remaining = getRemainingTodoCount();
-  document.querySelector("#todoProgress").textContent = `剩餘 ${remaining}／${tripData.todos.length}`;
 }
 
 function buildSummaryText() {
@@ -988,7 +1199,6 @@ function bindInteractions() {
   const dayTabs = document.querySelector("#dayTabs");
   const dayPanels = document.querySelector("#dayPanels");
   const shoppingGrid = document.querySelector("#shoppingGrid");
-  const todoList = document.querySelector("#todoList");
   const copySummaryButton = document.querySelector("#copySummary");
   const responseForm = document.querySelector("#responseForm");
   const submitResponseButton = document.querySelector("#submitResponseButton");
@@ -999,6 +1209,11 @@ function bindInteractions() {
   const saveEventButton = document.querySelector("#saveEventButton");
   const closeEventEditorButton = document.querySelector("#closeEventEditorButton");
   const cancelEventButton = document.querySelector("#cancelEventButton");
+  const addShoppingItemButton = document.querySelector("#addShoppingItemButton");
+  const shoppingItemForm = document.querySelector("#shoppingItemForm");
+  const saveShoppingItemButton = document.querySelector("#saveShoppingItemButton");
+  const closeShoppingItemButton = document.querySelector("#closeShoppingItemButton");
+  const cancelShoppingItemButton = document.querySelector("#cancelShoppingItemButton");
 
   dayTabs.addEventListener("click", (event) => {
     const button = event.target.closest("[data-day]");
@@ -1065,29 +1280,62 @@ function bindInteractions() {
     closeEventEditor();
   });
 
-  shoppingGrid.addEventListener("change", (event) => {
+  shoppingGrid.addEventListener("change", async (event) => {
     const checkbox = event.target.closest("[data-shopping-check]");
-    if (!checkbox) return;
+    if (checkbox) {
+      await setShoppingCompleted(checkbox.dataset.shoppingCheck, checkbox.checked);
+      return;
+    }
 
-    writeStorage(getStorageKey("shopping", checkbox.dataset.shoppingCheck), checkbox.checked);
-    renderShopping();
+    const photoInput = event.target.closest("[data-shopping-photo]");
+    if (!photoInput || !photoInput.files[0]) return;
+
+    setShoppingSyncStatus("正在上傳照片");
+    try {
+      await uploadShoppingPhoto(photoInput.dataset.shoppingPhoto, photoInput.files[0]);
+      setShoppingSyncStatus("照片已上傳", "synced");
+    } catch (error) {
+      setShoppingSyncStatus(error.message, "error");
+    } finally {
+      photoInput.value = "";
+    }
   });
 
-  shoppingGrid.addEventListener("input", (event) => {
-    const field = event.target.closest("[data-shopping-field]");
-    if (!field) return;
+  shoppingGrid.addEventListener("click", async (event) => {
+    const photoButton = event.target.closest("[data-select-shopping-photo]");
+    if (photoButton) {
+      const input = shoppingGrid.querySelector(`[data-shopping-photo="${photoButton.dataset.selectShoppingPhoto}"]`);
+      input.click();
+      return;
+    }
 
-    const key = getStorageKey("shopping", field.dataset.itemId, field.dataset.shoppingField);
-    writeStorage(key, field.value);
+    const deleteButton = event.target.closest("[data-delete-shopping]");
+    if (!deleteButton) return;
+
+    const item = getShoppingItems().find((current) => current.id === deleteButton.dataset.deleteShopping);
+    if (item && window.confirm(`確定要刪除「${item.name}」嗎？`)) {
+      await deleteShoppingItem(item.id);
+    }
   });
 
-  todoList.addEventListener("change", (event) => {
-    const checkbox = event.target.closest("[data-todo-id]");
-    if (!checkbox) return;
+  addShoppingItemButton.addEventListener("click", openShoppingItemEditor);
+  closeShoppingItemButton.addEventListener("click", closeShoppingItemEditor);
+  cancelShoppingItemButton.addEventListener("click", closeShoppingItemEditor);
 
-    writeStorage(getStorageKey("todo", checkbox.dataset.todoId), checkbox.checked);
-    renderTodos();
-    renderQuickInfo();
+  shoppingItemForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const values = Object.fromEntries(new FormData(shoppingItemForm).entries());
+    const name = String(values.name || "").trim();
+    if (!name) {
+      setShoppingItemMessage("請輸入品項名稱。", "error");
+      return;
+    }
+
+    saveShoppingItemButton.disabled = true;
+    setShoppingItemMessage("正在加入清單");
+    await addShoppingItem(String(values.category), name);
+    saveShoppingItemButton.disabled = false;
+    closeShoppingItemEditor();
   });
 
   copySummaryButton.addEventListener("click", async () => {
@@ -1142,22 +1390,27 @@ function initializeDashboard() {
   if (!loadLocalTripEvents()) {
     eventProgress = getLocalEventProgress();
   }
+  if (!loadLocalShoppingItems()) {
+    shoppingProgress = new Set(getShoppingItems().filter(isShoppingDone).map((item) => item.id));
+  }
   renderQuickInfo();
   renderDayTabs();
   renderSchedule();
-  renderFood();
   renderShopping();
   renderTransport();
-  renderTodos();
   renderSupabaseSettings();
   bindInteractions();
 
   loadResponses();
 
   loadEventProgress();
+  loadShoppingItems();
 
   if (typeof setInterval === "function") {
-    setInterval(loadEventProgress, 30000);
+    setInterval(() => {
+      loadEventProgress();
+      loadShoppingItems();
+    }, 30000);
   }
 }
 
@@ -1178,7 +1431,14 @@ globalThis.travelDashboard = {
   buildTripEventPayload,
   upsertEventInDays,
   removeEventFromDays,
-  tripEventFromRow
+  tripEventFromRow,
+  buildShoppingItemPayload,
+  upsertShoppingItem,
+  removeShoppingItem,
+  shoppingItemFromRow,
+  validateShoppingPhoto,
+  buildShoppingPhotoPath,
+  getPublicShoppingPhotoUrl
 };
 
 if (typeof document !== "undefined") {

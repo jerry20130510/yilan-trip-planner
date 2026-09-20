@@ -456,7 +456,7 @@ body {
 
 .quick-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   margin: -38px 0 70px;
   position: relative;
@@ -828,13 +828,6 @@ body {
   background: var(--gray-soft);
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.food-card,
 .transport-card {
   padding: 20px;
   border: 1px solid var(--line);
@@ -842,22 +835,15 @@ body {
   background: #ffffff;
 }
 
-.food-card h3,
 .transport-card h3 {
   margin: 12px 0 10px;
   font-size: 1.1rem;
 }
 
-.food-card p,
 .transport-card p {
   margin-bottom: 7px;
   color: var(--muted);
   line-height: 1.55;
-}
-
-.food-card .map-button {
-  width: 100%;
-  margin-top: 12px;
 }
 
 .placeholder {
@@ -872,7 +858,24 @@ body {
 
 .shopping-groups {
   display: grid;
-  gap: 32px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+}
+
+.shopping-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.shopping-group {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
 }
 
 .shopping-group h3 {
@@ -882,68 +885,79 @@ body {
 }
 
 .shopping-items {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .shopping-item {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
   gap: 12px;
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #ffffff;
+  min-height: 54px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
 }
 
-.shopping-item input[type="checkbox"],
-.todo-item input {
+.shopping-item:last-child {
+  border-bottom: 0;
+}
+
+.shopping-item input[type="checkbox"] {
   width: 21px;
   height: 21px;
   margin-top: 2px;
   accent-color: var(--grass);
 }
 
-.shopping-item.is-done,
-.todo-item.is-done {
+.shopping-item.is-done {
   opacity: 0.64;
   background: #f0f5f1;
 }
 
-.shopping-name {
+.shopping-item.is-done strong {
+  text-decoration: line-through;
+}
+
+.shopping-item-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
+  justify-content: flex-end;
+  gap: 6px;
 }
 
-.shopping-fields {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+.shopping-photo-input {
+  display: none;
 }
 
-.shopping-fields label {
-  color: var(--muted);
-  font-size: 0.76rem;
+.shopping-photo-button {
+  min-height: 36px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
 }
 
-.shopping-fields label:last-child {
-  grid-column: 1 / -1;
+.shopping-photo-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.48;
 }
 
-.shopping-fields input {
-  width: 100%;
-  min-height: 40px;
-  margin-top: 4px;
-  padding: 8px 9px;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  color: var(--ink);
-  background: #fbfcfa;
+.shopping-delete-button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: var(--danger);
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.shopping-delete-button:hover {
+  border-color: var(--danger);
+  background: var(--danger-soft);
 }
 
 .transport-layout {
@@ -957,28 +971,6 @@ body {
   padding-left: 20px;
   color: var(--muted);
   line-height: 1.8;
-}
-
-.todo-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.todo-item {
-  min-height: 58px;
-  display: flex;
-  align-items: flex-start;
-  gap: 11px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #ffffff;
-  cursor: pointer;
-}
-
-.todo-item span {
-  line-height: 1.55;
 }
 
 .mobile-nav {
@@ -1011,7 +1003,7 @@ body {
   }
 
   .quick-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
     margin-bottom: 54px;
   }
@@ -1029,7 +1021,8 @@ body {
     align-items: flex-end;
   }
 
-  #schedule .section-heading {
+  #schedule .section-heading,
+  #shopping .section-heading {
     flex-wrap: wrap;
   }
 
@@ -1060,6 +1053,11 @@ body {
     justify-content: flex-start;
   }
 
+  .shopping-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .schedule-actions .secondary-button {
     max-width: none;
   }
@@ -1080,17 +1078,24 @@ body {
     grid-column: auto;
   }
 
-  .card-grid,
-  .shopping-items,
-  .transport-layout,
-  .todo-list {
+  .shopping-groups,
+  .transport-layout {
     grid-template-columns: 1fr;
+  }
+
+  .shopping-item {
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+
+  .shopping-item-actions {
+    grid-column: 2;
+    justify-content: flex-start;
   }
 
   .mobile-nav {
     height: 66px;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     position: fixed;
     right: 0;
     bottom: 0;
@@ -1125,13 +1130,6 @@ body {
     font-size: 0.82rem;
   }
 
-  .shopping-fields {
-    grid-template-columns: 1fr;
-  }
-
-  .shopping-fields label:last-child {
-    grid-column: auto;
-  }
 }
 
 /* 前端與 Supabase 串接表單 */
@@ -1341,7 +1339,7 @@ body {
 
 @media (max-width: 760px) {
   .mobile-nav {
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   .mobile-nav a {
