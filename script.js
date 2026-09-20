@@ -706,12 +706,27 @@ async function removeShoppingPhotoFromStorage(photoPath) {
   }
 }
 
+function getLegacyShoppingItemId(photoId) {
+  const id = String(photoId || "");
+  return id.startsWith("legacy-") ? id.slice(7) : "";
+}
+
 async function deleteShoppingPhoto(photoId, photoPath) {
   await removeShoppingPhotoFromStorage(photoPath);
-  await supabaseTableRequest(SHOPPING_PHOTOS_TABLE, `photo_id=eq.${encodeURIComponent(photoId)}`, {
-    method: "DELETE",
-    headers: { Prefer: "return=minimal" }
-  });
+  const legacyItemId = getLegacyShoppingItemId(photoId);
+
+  if (legacyItemId) {
+    await supabaseTableRequest(SHOPPING_ITEMS_TABLE, `item_id=eq.${encodeURIComponent(legacyItemId)}`, {
+      method: "PATCH",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({ photo_path: "" })
+    });
+  } else {
+    await supabaseTableRequest(SHOPPING_PHOTOS_TABLE, `photo_id=eq.${encodeURIComponent(photoId)}`, {
+      method: "DELETE",
+      headers: { Prefer: "return=minimal" }
+    });
+  }
 
   replaceShoppingGroups(tripData.shopping.map((group) => ({
     ...group,
@@ -973,7 +988,7 @@ function renderShopping() {
                     ${item.photos.map((photo, index) => `
                       <span class="shopping-photo-entry">
                         <a class="shopping-photo-view-button" href="${getPublicShoppingPhotoUrl(photo.path)}" target="_blank" rel="noopener">檢視照片 ${index + 1}</a>
-                        <button class="shopping-photo-delete-button" type="button" data-delete-shopping-photo="${escapeHtml(photo.id)}" data-photo-path="${escapeHtml(photo.path)}" aria-label="刪除照片 ${index + 1}">刪除照片</button>
+                        <button class="shopping-photo-delete-button" type="button" data-delete-shopping-photo="${escapeHtml(photo.id)}" data-photo-path="${escapeHtml(photo.path)}" aria-label="刪除照片 ${index + 1}" title="刪除照片">×</button>
                       </span>
                     `).join("")}
                   </div>
@@ -1630,6 +1645,7 @@ globalThis.travelDashboard = {
   shoppingItemFromRow,
   shoppingPhotoFromRow,
   attachShoppingPhotos,
+  getLegacyShoppingItemId,
   validateShoppingPhoto,
   calculatePhotoDimensions,
   buildShoppingPhotoPath,
