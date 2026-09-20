@@ -962,6 +962,61 @@ body {
   text-decoration: line-through;
 }
 
+.shopping-item-main {
+  min-width: 0;
+}
+
+.shopping-photo-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.shopping-photo-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 32px;
+  padding: 3px 4px 3px 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.shopping-photo-entry a {
+  color: var(--grass);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.shopping-photo-entry a:hover {
+  text-decoration: underline;
+}
+
+.shopping-photo-delete-button {
+  width: 25px;
+  height: 25px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--danger);
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.shopping-photo-delete-button:hover {
+  background: var(--danger-soft);
+}
+
+.shopping-no-photo {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
 .shopping-item-actions {
   display: flex;
   flex-wrap: wrap;

@@ -223,6 +223,7 @@ const memoryStorage = new Map();
 const SUPABASE_TABLE = "trip_responses";
 const TRIP_EVENTS_TABLE = "trip_events";
 const SHOPPING_ITEMS_TABLE = "shopping_items";
+const SHOPPING_PHOTOS_TABLE = "shopping_item_photos";
 const SHOPPING_PHOTOS_BUCKET = "shopping-photos";
 const MAX_SHOPPING_PHOTO_SIZE = 10 * 1024 * 1024;
 const MAX_SHOPPING_PHOTO_DIMENSION = 1920;
@@ -512,8 +513,38 @@ function shoppingItemFromRow(row) {
     id: String(row.item_id),
     name: String(row.item_name || "未命名品項"),
     completed: Boolean(row.completed),
-    photoPath: String(row.photo_path || "")
+    photoPath: String(row.photo_path || ""),
+    photos: []
   };
+}
+
+function shoppingPhotoFromRow(row) {
+  return {
+    id: String(row.photo_id),
+    itemId: String(row.item_id),
+    path: String(row.photo_path),
+    createdAt: String(row.created_at || "")
+  };
+}
+
+function attachShoppingPhotos(groups, photoRows = []) {
+  const photos = photoRows.map(shoppingPhotoFromRow);
+
+  return groups.map((group) => ({
+    ...group,
+    items: group.items.map((item) => {
+      const itemPhotos = photos.filter((photo) => photo.itemId === item.id);
+      if (item.photoPath && !itemPhotos.some((photo) => photo.path === item.photoPath)) {
+        itemPhotos.unshift({
+          id: `legacy-${item.id}`,
+          itemId: item.id,
+          path: item.photoPath,
+          createdAt: ""
+        });
+      }
+      return { ...item, photos: itemPhotos };
+    })
+  }));
 }
 
 function upsertShoppingItem(groups, category, item) {
@@ -592,9 +623,15 @@ async function compressShoppingPhoto(file) {
   return blob;
 }
 
-function buildShoppingPhotoPath(itemId) {
+function createShoppingPhotoId() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  return `photo-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function buildShoppingPhotoPath(itemId, photoId = createShoppingPhotoId()) {
   const safeId = String(itemId).replace(/[^a-zA-Z0-9_-]/g, "-");
-  return `${safeId}/photo`;
+  const safePhotoId = String(photoId).replace(/[^a-zA-Z0-9_-]/g, "-");
+  return `${safeId}/${safePhotoId}.webp`;
 }
 
 function encodeStoragePath(path) {
@@ -607,28 +644,20 @@ function getPublicShoppingPhotoUrl(photoPath) {
   return `${config.url}/storage/v1/object/public/${SHOPPING_PHOTOS_BUCKET}/${encodeStoragePath(photoPath)}`;
 }
 
-function updateShoppingPhotoPath(itemId, photoPath) {
-  replaceShoppingGroups(tripData.shopping.map((group) => ({
-    ...group,
-    items: group.items.map((item) => (
-      item.id === itemId ? { ...item, photoPath } : item
-    ))
-  })));
-}
-
 async function uploadShoppingPhoto(itemId, file) {
   const compressedPhoto = await compressShoppingPhoto(file);
 
   const config = getSupabaseConfig();
   if (!isValidSupabaseConfig(config)) throw new Error("Supabase 連線設定不完整");
 
-  const photoPath = buildShoppingPhotoPath(itemId);
+  const photoId = createShoppingPhotoId();
+  const photoPath = buildShoppingPhotoPath(itemId, photoId);
   const uploadUrl = `${config.url}/storage/v1/object/${SHOPPING_PHOTOS_BUCKET}/${encodeStoragePath(photoPath)}`;
   const response = await fetch(uploadUrl, {
     method: "POST",
     headers: buildSupabaseHeaders(config.anonKey, {
       "Content-Type": compressedPhoto.type,
-      "x-upsert": "true"
+      "x-upsert": "false"
     }),
     body: compressedPhoto
   });
@@ -644,22 +673,53 @@ async function uploadShoppingPhoto(itemId, file) {
     throw new Error(message);
   }
 
-  updateShoppingPhotoPath(itemId, photoPath);
-  saveLocalShoppingItems();
-  renderShopping();
-
-  await supabaseTableRequest(SHOPPING_ITEMS_TABLE, `item_id=eq.${encodeURIComponent(itemId)}`, {
-    method: "PATCH",
+  await supabaseTableRequest(SHOPPING_PHOTOS_TABLE, "", {
+    method: "POST",
     headers: { Prefer: "return=minimal" },
-    body: JSON.stringify({ photo_path: photoPath })
+    body: JSON.stringify({
+      photo_id: photoId,
+      item_id: itemId,
+      photo_path: photoPath
+    })
   });
+
+  await loadShoppingItems();
+}
+
+async function removeShoppingPhotoFromStorage(photoPath) {
+  const config = getSupabaseConfig();
+  const response = await fetch(`${config.url}/storage/v1/object/${SHOPPING_PHOTOS_BUCKET}`, {
+    method: "DELETE",
+    headers: buildSupabaseHeaders(config.anonKey, { "Content-Type": "application/json" }),
+    body: JSON.stringify({ prefixes: [photoPath] })
+  });
+
+  if (!response.ok) {
+    let message = `照片刪除失敗 ${response.status}`;
+    try {
+      const errorData = await response.json();
+      message = errorData.message || errorData.error || message;
+    } catch (error) {
+      message = response.statusText || message;
+    }
+    throw new Error(message);
+  }
+}
+
+async function deleteShoppingPhoto(photoId, photoPath) {
+  await removeShoppingPhotoFromStorage(photoPath);
+  await supabaseTableRequest(SHOPPING_PHOTOS_TABLE, `photo_id=eq.${encodeURIComponent(photoId)}`, {
+    method: "DELETE",
+    headers: { Prefer: "return=minimal" }
+  });
+  await loadShoppingItems();
 }
 
 function replaceShoppingGroups(groups) {
   tripData.shopping.splice(0, tripData.shopping.length, ...groups);
 }
 
-function applyShoppingRows(rows) {
+function applyShoppingRows(rows, photoRows = []) {
   const groups = tripData.shopping.map((group) => ({
     ...group,
     items: rows
@@ -668,7 +728,7 @@ function applyShoppingRows(rows) {
       .map(shoppingItemFromRow)
   }));
   shoppingProgress = new Set(rows.filter((row) => row.completed).map((row) => String(row.item_id)));
-  replaceShoppingGroups(groups);
+  replaceShoppingGroups(attachShoppingPhotos(groups, photoRows));
 }
 
 function saveLocalShoppingItems() {
@@ -897,13 +957,22 @@ function renderShopping() {
           return `
             <li class="shopping-item ${done ? "is-done" : ""}">
               <input type="checkbox" data-shopping-check="${item.id}" ${done ? "checked" : ""} aria-label="${escapeHtml(item.name)}已購買">
-              <strong>${escapeHtml(item.name)}</strong>
+              <div class="shopping-item-main">
+                <strong>${escapeHtml(item.name)}</strong>
+                ${(item.photos || []).length ? `
+                  <div class="shopping-photo-list" aria-label="${escapeHtml(item.name)}的照片">
+                    ${item.photos.map((photo, index) => `
+                      <span class="shopping-photo-entry">
+                        <a href="${getPublicShoppingPhotoUrl(photo.path)}" target="_blank" rel="noopener">檢視照片 ${index + 1}</a>
+                        <button class="shopping-photo-delete-button" type="button" data-delete-shopping-photo="${escapeHtml(photo.id)}" data-photo-path="${escapeHtml(photo.path)}" aria-label="刪除照片 ${index + 1}" title="刪除照片">×</button>
+                      </span>
+                    `).join("")}
+                  </div>
+                ` : '<small class="shopping-no-photo">尚未上傳照片</small>'}
+              </div>
               <div class="shopping-item-actions">
                 <input class="shopping-photo-input" type="file" data-shopping-photo="${item.id}" accept="image/jpeg,image/png,image/webp">
                 <button class="secondary-button shopping-photo-button" type="button" data-select-shopping-photo="${item.id}">上傳照片</button>
-                ${item.photoPath
-                  ? `<a class="secondary-button shopping-photo-button" href="${getPublicShoppingPhotoUrl(item.photoPath)}" target="_blank" rel="noopener">檢視照片</a>`
-                  : '<button class="secondary-button shopping-photo-button" type="button" disabled>檢視照片</button>'}
                 <button class="shopping-delete-button" type="button" data-delete-shopping="${item.id}" aria-label="刪除${escapeHtml(item.name)}">×</button>
               </div>
             </li>
@@ -953,7 +1022,11 @@ async function loadShoppingItems() {
       });
     }
 
-    applyShoppingRows(rows);
+    const photoRows = await supabaseTableRequest(
+      SHOPPING_PHOTOS_TABLE,
+      "select=photo_id,item_id,photo_path,created_at&order=created_at.asc"
+    );
+    applyShoppingRows(rows, photoRows);
     saveLocalShoppingItems();
     renderShopping();
     setShoppingSyncStatus("採買清單已同步", "synced");
@@ -1397,6 +1470,24 @@ function bindInteractions() {
       return;
     }
 
+    const deletePhotoButton = event.target.closest("[data-delete-shopping-photo]");
+    if (deletePhotoButton) {
+      const confirmed = window.confirm("確定要刪除這張照片嗎？刪除後無法復原。");
+      if (!confirmed) return;
+
+      setShoppingSyncStatus("正在刪除照片");
+      try {
+        await deleteShoppingPhoto(
+          deletePhotoButton.dataset.deleteShoppingPhoto,
+          deletePhotoButton.dataset.photoPath
+        );
+        setShoppingSyncStatus("照片已刪除", "synced");
+      } catch (error) {
+        setShoppingSyncStatus(error.message, "error");
+      }
+      return;
+    }
+
     const deleteButton = event.target.closest("[data-delete-shopping]");
     if (!deleteButton) return;
 
@@ -1526,6 +1617,8 @@ globalThis.travelDashboard = {
   upsertShoppingItem,
   removeShoppingItem,
   shoppingItemFromRow,
+  shoppingPhotoFromRow,
+  attachShoppingPhotos,
   validateShoppingPhoto,
   calculatePhotoDimensions,
   buildShoppingPhotoPath,
