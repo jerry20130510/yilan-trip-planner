@@ -494,6 +494,48 @@ body {
   font-size: 1.18rem;
 }
 
+.quick-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.quick-card-header span {
+  margin-bottom: 8px;
+}
+
+.weather-refresh-button {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--grass);
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.weather-refresh-button:hover {
+  border-color: var(--grass);
+  background: var(--grass-soft);
+}
+
+.weather-refresh-button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.weather-details {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
 .dashboard-section {
   margin-bottom: 76px;
   scroll-margin-top: 24px;

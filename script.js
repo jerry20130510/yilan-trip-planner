@@ -3,12 +3,6 @@ const tripData = {
   startDate: "2026-09-25",
   endDate: "2026-09-26",
   people: 14,
-  weather: {
-    place: "宜蘭",
-    temperature: "28°C",
-    condition: "多雲",
-    source: "示意資料"
-  },
   days: [
     {
       id: "day1",
@@ -233,6 +227,7 @@ const SHOPPING_PHOTOS_BUCKET = "shopping-photos";
 const MAX_SHOPPING_PHOTO_SIZE = 5 * 1024 * 1024;
 const LOCAL_TRIP_EVENTS_KEY = "yilan-dashboard-trip-events";
 const LOCAL_SHOPPING_ITEMS_KEY = "yilan-dashboard-shopping-items";
+const WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast?latitude=24.757&longitude=121.753&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=Asia%2FTaipei";
 const SUPABASE_CONFIG = Object.freeze({
   url: "https://fkkoexjzpyzgfdwcjqub.supabase.co",
   anonKey: "sb_publishable_IUwnVjU03uZ1xrwqPeybRw_oSAHpuBQ"
@@ -745,7 +740,50 @@ async function setEventCompleted(eventId, completed) {
 function renderQuickInfo() {
   const nextEvent = getNextIncompleteEvent(tripData.days, eventProgress);
   document.querySelector("#nextEvent").textContent = nextEvent ? `${nextEvent.time} ${nextEvent.place}` : "全部行程已完成";
-  document.querySelector("#weatherInfo").textContent = `${tripData.weather.place} ${tripData.weather.temperature}／${tripData.weather.condition}`;
+}
+
+function getWeatherDescription(code) {
+  if (code === 0) return "晴朗";
+  if ([1, 2].includes(code)) return "晴時多雲";
+  if (code === 3) return "陰天";
+  if ([45, 48].includes(code)) return "有霧";
+  if ([51, 53, 55, 56, 57].includes(code)) return "毛毛雨";
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return "下雨";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "下雪";
+  if ([95, 96, 99].includes(code)) return "雷雨";
+  return "天氣狀況不明";
+}
+
+function formatWeatherTime(time) {
+  const date = new Date(time);
+  if (Number.isNaN(date.getTime())) return "剛剛更新";
+  return `${date.toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit", hour12: false })} 更新`;
+}
+
+async function loadCurrentWeather() {
+  const weatherInfo = document.querySelector("#weatherInfo");
+  const weatherDetails = document.querySelector("#weatherDetails");
+  const refreshButton = document.querySelector("#refreshWeatherButton");
+
+  refreshButton.disabled = true;
+  weatherDetails.textContent = "正在取得即時資料";
+
+  try {
+    const response = await fetch(WEATHER_API_URL);
+    if (!response.ok) throw new Error("目前無法取得天氣資料");
+
+    const data = await response.json();
+    const current = data.current;
+    if (!current) throw new Error("目前無法取得天氣資料");
+
+    weatherInfo.textContent = `${Math.round(current.temperature_2m)}°C／${getWeatherDescription(current.weather_code)}`;
+    weatherDetails.textContent = `體感 ${Math.round(current.apparent_temperature)}°C・濕度 ${current.relative_humidity_2m}%・風速 ${Math.round(current.wind_speed_10m)} 公里／時・${formatWeatherTime(current.time)}`;
+  } catch (error) {
+    weatherInfo.textContent = "暫時無法取得";
+    weatherDetails.textContent = "請稍後按重新整理再試一次";
+  } finally {
+    refreshButton.disabled = false;
+  }
 }
 
 function renderDayTabs() {
@@ -1214,6 +1252,9 @@ function bindInteractions() {
   const saveShoppingItemButton = document.querySelector("#saveShoppingItemButton");
   const closeShoppingItemButton = document.querySelector("#closeShoppingItemButton");
   const cancelShoppingItemButton = document.querySelector("#cancelShoppingItemButton");
+  const refreshWeatherButton = document.querySelector("#refreshWeatherButton");
+
+  refreshWeatherButton.addEventListener("click", loadCurrentWeather);
 
   dayTabs.addEventListener("click", (event) => {
     const button = event.target.closest("[data-day]");
@@ -1400,6 +1441,7 @@ function initializeDashboard() {
   renderTransport();
   renderSupabaseSettings();
   bindInteractions();
+  loadCurrentWeather();
 
   loadResponses();
 
@@ -1411,6 +1453,7 @@ function initializeDashboard() {
       loadEventProgress();
       loadShoppingItems();
     }, 30000);
+    setInterval(loadCurrentWeather, 10 * 60 * 1000);
   }
 }
 
@@ -1438,7 +1481,9 @@ globalThis.travelDashboard = {
   shoppingItemFromRow,
   validateShoppingPhoto,
   buildShoppingPhotoPath,
-  getPublicShoppingPhotoUrl
+  getPublicShoppingPhotoUrl,
+  getWeatherDescription,
+  formatWeatherTime
 };
 
 if (typeof document !== "undefined") {

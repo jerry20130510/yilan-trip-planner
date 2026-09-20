@@ -34,9 +34,13 @@
         <span>下一站</span>
         <strong id="nextEvent">讀取中</strong>
       </article>
-      <article class="quick-card">
-        <span>今日天氣</span>
-        <strong id="weatherInfo">讀取中</strong>
+      <article class="quick-card weather-card">
+        <div class="quick-card-header">
+          <span>宜蘭目前天氣</span>
+          <button class="weather-refresh-button" id="refreshWeatherButton" type="button" title="重新整理天氣" aria-label="重新整理天氣">↻</button>
+        </div>
+        <strong id="weatherInfo" aria-live="polite">讀取中</strong>
+        <small class="weather-details" id="weatherDetails">正在取得即時資料</small>
       </article>
     </section>
 
