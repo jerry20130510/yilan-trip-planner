@@ -984,30 +984,40 @@ body {
   background: #ffffff;
 }
 
-.shopping-photo-entry a {
+.shopping-photo-view-button {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 7px;
   color: var(--grass);
   font-size: 0.78rem;
   font-weight: 800;
   text-decoration: none;
 }
 
-.shopping-photo-entry a:hover {
+.shopping-photo-view-button:hover {
   text-decoration: underline;
 }
 
 .shopping-photo-delete-button {
-  width: 25px;
-  height: 25px;
-  border: 0;
-  border-radius: 50%;
+  min-height: 30px;
+  padding: 4px 8px;
+  border: 1px solid var(--danger);
+  border-radius: 5px;
   color: var(--danger);
-  background: transparent;
+  background: #ffffff;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 
 .shopping-photo-delete-button:hover {
   background: var(--danger-soft);
+}
+
+.shopping-photo-delete-button:disabled {
+  cursor: wait;
+  opacity: 0.5;
 }
 
 .shopping-no-photo {

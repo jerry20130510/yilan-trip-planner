@@ -712,6 +712,15 @@ async function deleteShoppingPhoto(photoId, photoPath) {
     method: "DELETE",
     headers: { Prefer: "return=minimal" }
   });
+
+  replaceShoppingGroups(tripData.shopping.map((group) => ({
+    ...group,
+    items: group.items.map((item) => ({
+      ...item,
+      photos: (item.photos || []).filter((photo) => photo.id !== photoId)
+    }))
+  })));
+  renderShopping();
   await loadShoppingItems();
 }
 
@@ -963,8 +972,8 @@ function renderShopping() {
                   <div class="shopping-photo-list" aria-label="${escapeHtml(item.name)}的照片">
                     ${item.photos.map((photo, index) => `
                       <span class="shopping-photo-entry">
-                        <a href="${getPublicShoppingPhotoUrl(photo.path)}" target="_blank" rel="noopener">檢視照片 ${index + 1}</a>
-                        <button class="shopping-photo-delete-button" type="button" data-delete-shopping-photo="${escapeHtml(photo.id)}" data-photo-path="${escapeHtml(photo.path)}" aria-label="刪除照片 ${index + 1}" title="刪除照片">×</button>
+                        <a class="shopping-photo-view-button" href="${getPublicShoppingPhotoUrl(photo.path)}" target="_blank" rel="noopener">檢視照片 ${index + 1}</a>
+                        <button class="shopping-photo-delete-button" type="button" data-delete-shopping-photo="${escapeHtml(photo.id)}" data-photo-path="${escapeHtml(photo.path)}" aria-label="刪除照片 ${index + 1}">刪除照片</button>
                       </span>
                     `).join("")}
                   </div>
@@ -1475,6 +1484,7 @@ function bindInteractions() {
       const confirmed = window.confirm("確定要刪除這張照片嗎？刪除後無法復原。");
       if (!confirmed) return;
 
+      deletePhotoButton.disabled = true;
       setShoppingSyncStatus("正在刪除照片");
       try {
         await deleteShoppingPhoto(
@@ -1484,6 +1494,7 @@ function bindInteractions() {
         setShoppingSyncStatus("照片已刪除", "synced");
       } catch (error) {
         setShoppingSyncStatus(error.message, "error");
+        deletePhotoButton.disabled = false;
       }
       return;
     }
