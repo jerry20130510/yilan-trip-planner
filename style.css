@@ -888,6 +888,36 @@ body {
   line-height: 1.55;
 }
 
+.vehicle-assignments {
+  margin: 12px 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.vehicle-assignments li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.vehicle-assignments li:last-child {
+  border-bottom: 0;
+}
+
+.vehicle-assignments span {
+  color: var(--muted);
+  text-align: right;
+}
+
+.support-car {
+  margin: 0;
+  padding-top: 12px;
+  border-top: 2px solid var(--sky-soft);
+}
+
 .placeholder {
   color: var(--danger);
   font-weight: 800;
@@ -1069,10 +1099,57 @@ body {
   background: var(--danger-soft);
 }
 
-.transport-layout {
+.transport-sections {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 42px;
+}
+
+.transport-group {
+  min-width: 0;
+}
+
+.transport-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.transport-group-heading p,
+.transport-group-heading h3 {
+  margin: 0;
+}
+
+.transport-group-heading p {
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.transport-group-heading h3 {
+  font-size: 1.25rem;
+}
+
+.transport-group-icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--grass);
+  background: var(--grass-soft);
+  font-weight: 900;
+}
+
+.transport-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+}
+
+.atv-card {
+  max-width: 760px;
 }
 
 .transport-card ul {
@@ -1188,7 +1265,7 @@ body {
   }
 
   .shopping-groups,
-  .transport-layout {
+  .transport-card-grid {
     grid-template-columns: 1fr;
   }
 

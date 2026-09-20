@@ -207,14 +207,20 @@ const tripData = {
   ],
   transport: {
     cars: [
-      { owner: "分車名單待整理", passengers: "待確認", meetingPoint: "待確認", departure: "9/25 09:00", seats: "待確認", note: "確認車主後可直接修改資料" }
+      { owner: "謝", passengers: ["關關", "阿處", "Yuni"] },
+      { owner: "隆", passengers: ["Jerry", "晴", "卉", "Luke"] },
+      { owner: "廷廷", passengers: ["Wendy", "小戴", "Kiki", "Ting"] }
     ],
     atv: {
-      vehicles: "150cc 沙灘車 × 6 台",
-      supportCar: "保母車 × 1 台",
-      supportMembers: ["Yuni", "隆", "Luke"],
-      others: "其他人員分車待確認",
-      price: "正式價格待確認"
+      groups: [
+        ["生"],
+        ["戴", "周"],
+        ["柏毅", "亭"],
+        ["卉", "晴"],
+        ["謝", "關"],
+        ["郭", "Wendy"]
+      ],
+      supportMembers: ["Yuni", "隆", "Luke"]
     }
   }
 };
@@ -1141,29 +1147,48 @@ function closeShoppingItemEditor() {
 function renderTransport() {
   const carCards = tripData.transport.cars.map((car) => `
     <article class="transport-card">
-      <span class="status status-pending">名單待整理</span>
-      <h3>分車卡片</h3>
-      <p>車主：${escapeHtml(car.owner)}</p>
-      <p>乘客：${escapeHtml(car.passengers)}</p>
-      <p>集合點：${escapeHtml(car.meetingPoint)}</p>
-      <p>出發時間：${escapeHtml(car.departure)}</p>
-      <p>剩餘座位：${escapeHtml(car.seats)}</p>
-      <p>備註：${escapeHtml(car.note)}</p>
+      <span class="status status-confirmed">已分配</span>
+      <h3>${escapeHtml(car.owner)}的車</h3>
+      <p>乘客：${car.passengers.map(escapeHtml).join("、")}</p>
+      <p>共 ${car.passengers.length + 1} 人</p>
     </article>
   `).join("");
 
   const atv = tripData.transport.atv;
   document.querySelector("#transportGrid").innerHTML = `
-    ${carCards}
-    <article class="transport-card">
-      <span class="status status-tentative">分組中</span>
-      <h3>沙灘車分組</h3>
-      <p>${escapeHtml(atv.vehicles)}</p>
-      <p>${escapeHtml(atv.supportCar)}</p>
-      <p>保母車人員：${atv.supportMembers.map(escapeHtml).join("、")}</p>
-      <p>${escapeHtml(atv.others)}</p>
-      <p class="placeholder">${escapeHtml(atv.price)}</p>
-    </article>
+    <section class="transport-group" aria-labelledby="carAssignmentTitle">
+      <div class="transport-group-heading">
+        <span class="transport-group-icon" aria-hidden="true">車</span>
+        <div>
+          <p>集合後前往宜蘭</p>
+          <h3 id="carAssignmentTitle">前往宜蘭的汽車分配</h3>
+        </div>
+      </div>
+      <div class="transport-card-grid">${carCards}</div>
+    </section>
+
+    <section class="transport-group" aria-labelledby="atvAssignmentTitle">
+      <div class="transport-group-heading">
+        <span class="transport-group-icon" aria-hidden="true">玩</span>
+        <div>
+          <p>抵達活動地點後換車</p>
+          <h3 id="atvAssignmentTitle">現場沙灘車分組</h3>
+        </div>
+      </div>
+      <article class="transport-card atv-card">
+        <span class="status status-confirmed">已分配</span>
+        <h3>150cc 沙灘車</h3>
+        <ol class="vehicle-assignments">
+          ${atv.groups.map((members, index) => `
+            <li>
+              <strong>${index + 1} 號車</strong>
+              <span>${members.map(escapeHtml).join("、")}${members.length === 1 ? "（單人）" : ""}</span>
+            </li>
+          `).join("")}
+        </ol>
+        <p class="support-car"><strong>保母車（${atv.supportMembers.length} 人）</strong>：${atv.supportMembers.map(escapeHtml).join("、")}</p>
+      </article>
+    </section>
   `;
 }
 
