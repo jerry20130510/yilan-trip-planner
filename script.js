@@ -224,7 +224,8 @@ const SUPABASE_TABLE = "trip_responses";
 const TRIP_EVENTS_TABLE = "trip_events";
 const SHOPPING_ITEMS_TABLE = "shopping_items";
 const SHOPPING_PHOTOS_BUCKET = "shopping-photos";
-const MAX_SHOPPING_PHOTO_SIZE = 5 * 1024 * 1024;
+const MAX_SHOPPING_PHOTO_SIZE = 10 * 1024 * 1024;
+const MAX_SHOPPING_PHOTO_DIMENSION = 1920;
 const LOCAL_TRIP_EVENTS_KEY = "yilan-dashboard-trip-events";
 const LOCAL_SHOPPING_ITEMS_KEY = "yilan-dashboard-shopping-items";
 const WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast?latitude=24.757&longitude=121.753&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=Asia%2FTaipei";
@@ -540,8 +541,55 @@ function validateShoppingPhoto(file) {
   const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
   if (!file) return "請先選擇照片。";
   if (!allowedTypes.includes(file.type)) return "照片只支援 JPG、PNG 或 WebP。";
-  if (file.size > MAX_SHOPPING_PHOTO_SIZE) return "照片大小不可超過 5 MB。";
+  if (file.size > MAX_SHOPPING_PHOTO_SIZE) return "照片大小不可超過 10 MB。";
   return "";
+}
+
+function calculatePhotoDimensions(width, height, maxDimension = MAX_SHOPPING_PHOTO_DIMENSION) {
+  const longestSide = Math.max(width, height);
+  if (longestSide <= maxDimension) return { width, height };
+
+  const scale = maxDimension / longestSide;
+  return {
+    width: Math.round(width * scale),
+    height: Math.round(height * scale)
+  };
+}
+
+function loadPhoto(file) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const source = URL.createObjectURL(file);
+
+    image.onload = () => {
+      URL.revokeObjectURL(source);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(source);
+      reject(new Error("無法讀取這張照片。"));
+    };
+    image.src = source;
+  });
+}
+
+async function compressShoppingPhoto(file) {
+  const validationMessage = validateShoppingPhoto(file);
+  if (validationMessage) throw new Error(validationMessage);
+
+  const image = await loadPhoto(file);
+  const dimensions = calculatePhotoDimensions(image.naturalWidth, image.naturalHeight);
+  const canvas = document.createElement("canvas");
+  canvas.width = dimensions.width;
+  canvas.height = dimensions.height;
+
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("目前的瀏覽器無法處理照片。");
+  context.drawImage(image, 0, 0, dimensions.width, dimensions.height);
+
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.82));
+  if (!blob) throw new Error("照片壓縮失敗，請換一張照片再試。");
+  return blob;
 }
 
 function buildShoppingPhotoPath(itemId) {
@@ -569,8 +617,7 @@ function updateShoppingPhotoPath(itemId, photoPath) {
 }
 
 async function uploadShoppingPhoto(itemId, file) {
-  const validationMessage = validateShoppingPhoto(file);
-  if (validationMessage) throw new Error(validationMessage);
+  const compressedPhoto = await compressShoppingPhoto(file);
 
   const config = getSupabaseConfig();
   if (!isValidSupabaseConfig(config)) throw new Error("Supabase 連線設定不完整");
@@ -580,10 +627,10 @@ async function uploadShoppingPhoto(itemId, file) {
   const response = await fetch(uploadUrl, {
     method: "POST",
     headers: buildSupabaseHeaders(config.anonKey, {
-      "Content-Type": file.type,
+      "Content-Type": compressedPhoto.type,
       "x-upsert": "true"
     }),
-    body: file
+    body: compressedPhoto
   });
 
   if (!response.ok) {
@@ -1331,7 +1378,7 @@ function bindInteractions() {
     const photoInput = event.target.closest("[data-shopping-photo]");
     if (!photoInput || !photoInput.files[0]) return;
 
-    setShoppingSyncStatus("正在上傳照片");
+    setShoppingSyncStatus("正在壓縮並上傳照片");
     try {
       await uploadShoppingPhoto(photoInput.dataset.shoppingPhoto, photoInput.files[0]);
       setShoppingSyncStatus("照片已上傳", "synced");
@@ -1480,6 +1527,7 @@ globalThis.travelDashboard = {
   removeShoppingItem,
   shoppingItemFromRow,
   validateShoppingPhoto,
+  calculatePhotoDimensions,
   buildShoppingPhotoPath,
   getPublicShoppingPhotoUrl,
   getWeatherDescription,
